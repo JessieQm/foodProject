@@ -47,7 +47,7 @@
     <script src="js/me-lazyload.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script type="text/javascript">
-    	var footApp=angular.module("footModule",['ui.router'])
+    	var footApp=angular.module("footModule",['ui.router','me-lazyload'])
              .run(function($rootScope){
                 $rootScope.globaVar={
                     categories:"http://localhost/index.php",
