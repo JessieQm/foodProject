@@ -1,0 +1,44 @@
+<div class="container marketing">
+      <!-- n*3
+    通过下标 -->
+     <nav>
+      <ul class="pagination">
+        <li><a href="#">&laquo;</a></li>
+        <li><a href="#/navbar/foodList/{{id}}/{{p+1}}"  ng-repeat="p in pageList" >{{p+1}}</a></li>
+        <li><a href="#">&raquo;</a></li>
+     
+      </ul>
+    </nav>
+      <!-- Three columns of text below the carousel -->
+      <!-- <div class="row"  ng-repeat="foods in foodLists" >
+        <div class="col-lg-4" ng-repeat="food in foods">
+          <img class="img-circle" src="{{globaVar.imagePrefile}}{{food.img}}"style="width: 140px; height: 140px;">
+          <h2>{{food.name}}</h2>
+          <p>{{food.description}} | limitTo=50</p>
+          <p><a class="btn btn-default" href="#" role="button">查看详情</a></p>
+        </div>
+      </div> --><!-- /.row -->
+      <div class="row" ng-repeat='food in foodLists' ng-if='$index % 3==0' >
+        <div class="col-lg-4" ng-if="foodLists[$index].id != undefined" >
+          <img class="img-circle" lazy-src="{{globaVar.imagePrefix}}{{foodLists[$index].img}}" alt="{{foodLists[$index].name}}" style="width: 140px; height: 140px;">
+          <h2>{{foodLists[$index].name}}</h2>
+          <p>{{foodLists[$index].description|limitTo:50}}</p>
+          <p><a class="btn btn-default" href="#navbar/foodDetail/{{foodLists[$index].id}}" role="button">查看详情 &raquo;</a></p>
+        </div>
+         <div class="col-lg-4" ng-if="foodLists[$index].id!=undefined" >
+          <img class="img-circle" lazy-src="{{globaVar.imagePrefix}}{{foodLists[$index+1].img}}" alt="{{foodLists[$index+1].name}}" style="width: 140px; height: 140px;">
+          <h2>{{foodLists[$index+1].name}}</h2>
+          <p>{{foodLists[$index+1].description|limitTo:50}}</p>
+          <p><a class="btn btn-default" href="#navbar/foodDetail/{{foodLists[$index+1].id}}" role="button">查看详情 &raquo;</a></p>
+        </div>
+         <div class="col-lg-4" ng-if="foodLists[$index+2].id!=undefined">
+          <img class="img-circle" lazy-src="{{globaVar.imagePrefix}}{{foodLists[$index+2].img}}" alt="{{foodLists[$index+2].name}}" style="width: 140px; height: 140px;">
+          <h2>{{foodLists[$index+2].name}}</h2>
+          <p>{{foodLists[$index+2].description|limitTo:50}}</p>
+          <p><a class="btn btn-default" href="#navbar/foodDetail/{{foodLists[$index+2].id}}" role="button">查看详情 &raquo;</a></p>
+        </div>
+       
+      </div>
+
+
+ </div>

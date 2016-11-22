@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- <link rel="icon" href="../../favicon.ico"> -->
+    <title>Carousel Template for Bootstrap</title>
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <!-- <script src="js/ie-emulation-modes-warning.js"></script> -->
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Custom styles for this template -->
+    <!-- <link href="carousel.css" rel="stylesheet"> -->
+    <style type="text/css">
+        .activeMenu{
+
+            color:red !important;
+        }
+    </style>
+  </head>
+<!-- NAVBAR
+================================================== -->
+  <body ng-app="footModule">
+   <!-- /.container -->
+
+   <ui-view></ui-view>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery-2.1.1.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- <script src="js/docs.min.js"></script> -->
+     <script src="js/angular.js"></script>
+    <script src="js/angular-ui-router.js"></script>
+    <script src="js/me-lazyload.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script type="text/javascript">
+    	var footApp=angular.module("footModule",['ui.router'])
+             .run(function($rootScope){
+                $rootScope.globaVar={
+                    categories:"http://localhost/index.php",
+                    foodList:"http://localhost/foodList.php",
+                    imagePrefix:'http://tnfs.tngou.net/image',
+                    foodDetail:"http://localhost/detail.php"
+                }
+             })
+             .config(function($stateProvider,$urlRouterProvider,$urlMatcherFactoryProvider){
+                    $urlMatcherFactoryProvider.caseInsensitive(true);//不区分大小写
+                	$urlRouterProvider.otherwise("/navbar/home");//otherwise()
+                	$stateProvider
+                	.state('navbar',{
+                		url:'/navbar',
+                		templateUrl:'template/navbar.html',
+                		controller:'navbarController',
+                        resolve:{
+                            categories:function($http,$rootScope){
+                                return $http({
+                                    url:$rootScope.globaVar.categories
+                                }).then(function(res){
+                                    return res.data.tngou;
+                                    // console.log(res.data.tngou);
+                                })
+                            }
+                        }
+                	})
+                	.state('navbar.home',{
+                		url:'/home',
+                		templateUrl:'template/home.html',
+                		controller :'homeController'
+                	})
+                    .state('navbar.foodList',{
+                        url:'/foodList/:id/:page',
+                        templateUrl:'template/foodList.html',
+                        controller :'foodListController',
+                        resolve:{
+                            foodList:function($http,$stateParams,$rootScope){
+                                var permise =$http({
+                                    url:$rootScope.globaVar.foodList,
+                                    params:{
+                                        id:$stateParams.id,
+                                        page:$stateParams.page
+                                    }
+
+                                }).then(function(res){
+                                    console.log(res);
+                                    return res.data;
+
+                                })
+                                return permise;
+
+                            }
+                        }
+
+                    })
+                    .state('navbar.foodDetail',{
+                        url:'/foodDetail/:id',
+                        templateUrl:'template/foodDetail.html',
+                        controller :'foodDetailController',
+                        resolve:{
+                            foodDetail:function($http,$stateParams,$rootScope){
+                                var permise =$http({
+                                    url:$rootScope.globaVar.foodDetail,
+                                    params:{
+                                        id:$stateParams.id
+                                    }
+
+                                }).then(function(res){
+                                    // console.log(res);
+                                    return res.data;
+
+                                })
+                                return permise;
+
+                            }
+                        }
+                    })
+            })
+            .controller('navbarController',function($scope,categories){
+                    $scope.categories=categories;
+
+            })
+            .controller('homeController',function($scope){
+            })
+            .controller('foodListController',function($scope,foodList,$stateParams){
+                $scope.total= foodList.total;
+               //  var tngou=[];
+               //  var data=foodList.tngou;
+               // for(var i=0;i<foodList.total;i+=3){
+               //      tngou.push(data.splice(0,3));
+               // }
+               // console.log(tngou);
+               // $scope.foodLists=tngou;
+               $scope.foodLists=foodList.tngou;
+
+               //分页
+               // alert(foodList.total);
+                var pageList=[];
+                // alert(foodList.total/30);
+                for(var i=0;i<Math.ceil(foodList.total/30);i++){
+                    pageList.push(i);
+                }
+                $scope.pageList=pageList;
+                $scope.id=$stateParams.id;
+                $scope.page=$stateParams.page;
+                // console.log(foodList.tngou[1])
+            })
+             .controller('foodDetailController',function($scope,foodDetail,$stateParams){
+                console.log(foodDetail);
+
+                $scope.foodDetail=foodDetail;
+            })
+
+           
+
+    </script>
+   
+  </body>
+</html>
